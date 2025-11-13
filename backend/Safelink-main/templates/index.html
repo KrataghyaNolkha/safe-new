@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Phishing URL Detector</title>
+    <style>
+      :root { color-scheme: light dark; }
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
+      .container { max-width: 720px; margin: 0 auto; padding: 24px; }
+      h1 { font-size: 1.75rem; margin: 0 0 16px; }
+      p { margin: 0 0 16px; opacity: 0.9; }
+      form { display: flex; gap: 8px; margin-top: 12px; }
+      input[type="url"] { flex: 1; padding: 10px 12px; border-radius: 8px; border: 1px solid #8884; font-size: 1rem; }
+      button { padding: 10px 14px; border-radius: 8px; border: 0; background: #2563eb; color: white; font-weight: 600; cursor: pointer; }
+      button:disabled { opacity: 0.6; cursor: not-allowed; }
+      .card { margin-top: 16px; padding: 16px; border-radius: 12px; border: 1px solid #8884; }
+      .result { font-size: 1.1rem; margin-top: 8px; }
+      .pill { display: inline-block; padding: 4px 10px; border-radius: 999px; font-weight: 700; }
+      .legit { background: #16a34a20; color: #16a34a; border: 1px solid #16a34a55; }
+      .phish { background: #dc262620; color: #dc2626; border: 1px solid #dc262655; }
+      .error { background: #b91c1c20; color: #b91c1c; border: 1px solid #b91c1c55; }
+      footer { margin-top: 28px; opacity: 0.7; font-size: 0.9rem; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Phishing URL Detector</h1>
+      <p>Enter a URL to check whether it's likely phishing or legitimate.</p>
+
+      <form id="predict-form">
+        <input id="url-input" type="url" placeholder="https://example.com/login" required>
+        <button id="submit-btn" type="submit">Check</button>
+      </form>
+
+      <div class="card" style="height: 420px; position: relative; overflow: hidden; margin-top: 16px;">
+        <spline-viewer
+          url="https://my.spline.design/claritystream-ouwTGKvTCeANhWKSsEYvANOB/"
+          style="position:absolute; inset:0; width:100%; height:100%; display:block;"
+        ></spline-viewer>
+      </div>
+
+      <div id="status" class="card" hidden></div>
+      <div id="output" class="card" hidden>
+        <div>URL: <span id="out-url"></span></div>
+        <div class="result">Prediction: <span id="out-pred"></span></div>
+      </div>
+
+      <footer>
+        This is a demo. Do not rely solely on this for security decisions.
+      </footer>
+    </div>
+    <link rel="stylesheet" href="/static/prism.css" />
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@latest/build/spline-viewer.js"></script>
+    <script src="/static/app.js"></script>
+  </body>
+  </html>
+
+

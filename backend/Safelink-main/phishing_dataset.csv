@@ -1,0 +1,7 @@
+url,label
+http://example.com,0
+http://phishing-site.com/login,1
+https://secure-bank.com,0
+http://fake-bank.net,1
+https://google.com,0
+http://malicious-site.org,1
