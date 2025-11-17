@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.9",
     "@splinetool/react-spline": "^4.1.0",
     "@tailwindcss/vite": "^4.0.0",
     "appwrite": "^18.1.1",
