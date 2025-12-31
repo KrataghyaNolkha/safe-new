@@ -41,11 +41,10 @@ def load_model():
     except Exception as e:
         print(f"❌ Error loading model: {e}")
 
-# --- Pydantic Models (Matching Hero.jsx structure) ---
+# --- Pydantic Models (Updated) ---
 class URLRequest(BaseModel):
     url: str
 
-# These nested classes define the structure Hero.jsx expects
 class ReportSummary(BaseModel):
     analysis_category: str
     detection_count: int
@@ -57,7 +56,7 @@ class TechnicalDetails(BaseModel):
     domain: str
     ip_address: str
     registrar: str
-    creation_date: str
+    # Removed creation_date
     ssl_status: str
     analysis_time: str
 
@@ -71,7 +70,7 @@ class FullReport(BaseModel):
     confidence_score: float
     report_summary: ReportSummary
     comparison_modules: List[Dict[str, str]]
-    categories: List[Dict[str, Any]]
+    # Removed categories
     technical_details: TechnicalDetails
     heuristic_features: List[HeuristicFeature]
 
@@ -88,9 +87,12 @@ def url_lexical_matrix_single(url, feature_names):
 
 def simulate_vendor_data(is_phishing):
     """Generates fake vendor data to satisfy the UI."""
+    # INCREASED VENDORS LIST
     vendors = [
         "Google Safe Browsing", "PhishTank", "OpenPhish", 
-        "McAfee", "Norton Safe Web", "Sophos"
+        "McAfee", "Norton Safe Web", "Sophos",
+        "Microsoft Defender", "BitDefender", "Kaspersky",
+        "Avast", "ESET", "Trend Micro"
     ]
     modules = []
     
@@ -188,21 +190,17 @@ def predict(request: URLRequest):
             "report_summary": {
                 "analysis_category": "URL Analysis & Heuristics",
                 "detection_count": detection_count,
-                "total_vendors": 6,
+                "total_vendors": len(comparison_modules), # Now dynamic
                 "detection_details": "Threat intelligence cross-reference complete." if not is_whitelisted else "Domain found in Global Trusted Whitelist.",
                 "final_verdict": "Malicious" if is_phishing else "Safe"
             },
             "comparison_modules": comparison_modules,
-            "categories": [
-                {"name": "Phishing Probability", "relevance": int(confidence * 100)},
-                {"name": "Domain Trust Score", "relevance": 100 if not is_phishing else 20},
-                {"name": "Spam Likelihood", "relevance": 90 if is_phishing else 10}
-            ],
+            # REMOVED CATEGORIES LIST HERE
             "technical_details": {
                 "domain": domain,
                 "ip_address": "Hidden (Privacy)", # Placeholder
                 "registrar": "Whois Guard Protected", # Placeholder
-                "creation_date": "Not Available", # Placeholder
+                # REMOVED CREATION DATE HERE
                 "ssl_status": "Valid" if raw_feats.get('has_https', 0) == 1 else "Missing",
                 "analysis_time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             },
