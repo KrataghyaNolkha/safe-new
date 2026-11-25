@@ -21,8 +21,7 @@ def download_dataset():
             'http://example.com',
             'http://phishing-site.com/login',
             'https://secure-bank.com',
-            'http://fake-bank.net',
-            'https://google.com',
+            'http://fake-bank.net',            'https://google.com',
             'http://malicious-site.org'
         ],
         'label': [0, 1, 0, 1, 0, 1]  # 0: legitimate, 1: phishing

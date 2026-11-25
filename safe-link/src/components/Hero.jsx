@@ -122,11 +122,9 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* RESULT MODALS - Only one is displayed at a time */}
-      {/* 1. Loading State */}
+      {/* RESULT MODALS */}
       {isLoading && <LoadingModal />}
 
-      {/* 2. Success Result State */}
       {result && (
         <ResultModal 
           result={result} 
@@ -153,7 +151,7 @@ const Hero = () => {
   );
 };
 
-// --- Loading Modal Component (Processing Image) ---
+// --- Loading Modal Component ---
 const LoadingModal = () => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
@@ -168,7 +166,7 @@ const LoadingModal = () => {
 };
 
 
-// --- Result Modal Component (Phishing/Legitimate Images) ---
+// --- Result Modal Component ---
 const ResultModal = ({ result, onClose }) => {
   const report = result.report;
   const isPhishing = report.ml_prediction === 'phishing';
@@ -176,7 +174,6 @@ const ResultModal = ({ result, onClose }) => {
   const detectionColor = isPhishing ? 'bg-red-500' : 'bg-green-500';
   const progressBarWidth = (report.report_summary.detection_count / report.report_summary.total_vendors) * 100;
   
-  // Get confidence score from the report object (NEW)
   const confidencePercent = parseFloat(report.confidence_score) * 100;
 
 
@@ -190,27 +187,8 @@ const ResultModal = ({ result, onClose }) => {
       </div>
     );
   };
-
-  const renderCategoryBar = (category) => {
-    const barWidth = category.relevance || 0;
-    return (
-      <div key={category.name} className="mb-2">
-        <div className="flex justify-between items-center text-xs mb-1 text-gray-400">
-          <span>{category.name}</span>
-          <span>{barWidth}%</span>
-        </div>
-        <div className="w-full bg-gray-700/50 rounded-full h-2">
-          <div 
-            className="h-2 rounded-full bg-purple-500/70" 
-            style={{ width: `${barWidth}%` }}
-          ></div>
-        </div>
-      </div>
-    );
-  };
   
   const renderHeuristicFeature = (feature) => {
-    // Treat any non-zero value or 'No' as a potential flag for simplified display
     const isFlagged = feature.value > 0 || feature.value === 'No'; 
     return (
       <div key={feature.name} className="flex items-center space-x-3 p-3 bg-gray-800/50 rounded-lg">
@@ -239,7 +217,7 @@ const ResultModal = ({ result, onClose }) => {
         className={`relative w-full max-w-4xl m-4 bg-gray-900/80 backdrop-blur-xl border ${
           isPhishing ? 'border-red-500/50' : 'border-green-500/50'
         } rounded-3xl shadow-2xl p-8 transition-all duration-300 transform scale-100 opacity-100`}
-        onClick={(e) => e.stopPropagation()} // Prevent modal close on card click
+        onClick={(e) => e.stopPropagation()} 
       >
         {/* Close Button */}
         <button 
@@ -255,7 +233,6 @@ const ResultModal = ({ result, onClose }) => {
         <div className="text-center pb-6 border-b border-gray-700/50">
           <div className="flex justify-center items-center space-x-4 mb-1">
              <p className="text-gray-400 text-sm">{report.report_summary.analysis_category.toUpperCase()} - {report.technical_details.analysis_time}</p>
-             {/* ADDED CONFIDENCE SCORE DISPLAY */}
              <div className={`px-3 py-0.5 rounded-full text-xs font-bold ${
                 isPhishing ? 'bg-red-900 text-red-300' : 'bg-green-900 text-green-300'
              }`}>
@@ -294,7 +271,7 @@ const ResultModal = ({ result, onClose }) => {
           <p className="text-gray-400 text-sm">{report.report_summary.detection_details}</p>
         </div>
         
-        {/* --- 3. Tabbed Information (Detection, Technical, Features) --- */}
+        {/* --- 3. Tabbed Information --- */}
         <div className="mt-8">
             <Tab.Group>
                 <Tab.List className="flex p-1 space-x-1 bg-gray-800/70 rounded-xl">
@@ -340,26 +317,16 @@ const ResultModal = ({ result, onClose }) => {
                 </Tab.List>
 
                 <Tab.Panels className="mt-4">
-                    {/* Panel 1: Scanner Modules & Categories (Matches Image 1) */}
-                    <Tab.Panel className="p-4 bg-gray-900/50 rounded-xl grid grid-cols-2 gap-6">
-                        {/* Column 1: Module Comparison */}
-                        <div className="space-y-2">
-                           <h4 className="text-sm font-semibold text-gray-300 mb-2 border-b border-gray-700 pb-1">Vendor Comparison (Simulated)</h4>
-                           <div className="space-y-2">
-                               {report.comparison_modules.map(renderDetectionModuleCard)}
-                           </div>
-                        </div>
-                        
-                        {/* Column 2: Website Categories */}
-                        <div className="space-y-2">
-                           <h4 className="text-sm font-semibold text-gray-300 mb-4 border-b border-gray-700 pb-1">Website Categories (Relevance)</h4>
-                           <div className="space-y-4">
-                               {report.categories.map(renderCategoryBar)}
-                           </div>
+                    {/* Panel 1: Scanner Modules (UPDATED) */}
+                    <Tab.Panel className="p-4 bg-gray-900/50 rounded-xl">
+                        {/* We now use a grid for the vendors since there are more of them and no categories */}
+                        <h4 className="text-sm font-semibold text-gray-300 mb-4 border-b border-gray-700 pb-1">Vendor Comparison (Simulated)</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            {report.comparison_modules.map(renderDetectionModuleCard)}
                         </div>
                     </Tab.Panel>
 
-                    {/* Panel 2: Technical Information (Matches Image 2) */}
+                    {/* Panel 2: Technical Information (UPDATED - Removed Creation Date) */}
                     <Tab.Panel className="p-4 bg-gray-900/50 rounded-xl">
                         <dl className="grid grid-cols-2 gap-4 text-sm">
                             <div className="col-span-1">
@@ -374,11 +341,9 @@ const ResultModal = ({ result, onClose }) => {
                                 <dt className="text-gray-500 font-medium">Registrar:</dt>
                                 <dd className="text-white">{report.technical_details.registrar}</dd>
                             </div>
+                            {/* CREATION DATE REMOVED */}
+                            
                             <div className="col-span-1">
-                                <dt className="text-gray-500 font-medium">Creation Date:</dt>
-                                <dd className="text-white">{report.technical_details.creation_date}</dd>
-                            </div>
-                            <div className="col-span-2">
                                 <dt className="text-gray-500 font-medium">SSL Status (HTTPS):</dt>
                                 <dd className={`font-bold ${report.technical_details.ssl_status === 'Valid' ? 'text-green-400' : 'text-red-400'}`}>
                                     {report.technical_details.ssl_status}
@@ -393,7 +358,7 @@ const ResultModal = ({ result, onClose }) => {
                         </dl>
                     </Tab.Panel>
                     
-                    {/* Panel 3: ML Feature Breakdown (New) */}
+                    {/* Panel 3: ML Feature Breakdown */}
                     <Tab.Panel className="p-4 bg-gray-900/50 rounded-xl">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {report.heuristic_features.map(renderHeuristicFeature)}

@@ -1,0 +1,18 @@
+# Python-generated files and virtual environments
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+backend/Safelink-main/.venv/
+
+# Frontend dependencies and build caches
+node_modules/
+safe-link/node_modules/
+safe-link/dist/
+
+# Local development logs
+*-server.log
+*-server-error.log
+
+# Large generated training artifact; reproduce with train.py or store via Git LFS.
+backend/Safelink-main/phishing_pipeline.pkl
